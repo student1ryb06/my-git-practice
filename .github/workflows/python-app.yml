@@ -1,0 +1,32 @@
+name: Python CI
+
+# Тригери: запускати при кожному push або pull request у головну гілку
+on: [push, pull_request]
+
+jobs:
+  test:
+    # Використовуємо останню версію Ubuntu як операційну систему
+    runs-on: ubuntu-latest
+
+    steps:
+    # Крок 1: Код із репозиторію на віртуальну машину
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Крок 2: Встановлено Python версії 3.8
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    # Крок 3: Оновлено pip та встановлюємо залежності
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Якщо у вас немає файлу requirements.txt, цей рядок можна пропустити
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    # Крок 4: Запуск тестів через вбудований модуль unittest
+    - name: Run tests
+      run: |
+        python -m unittest discover
